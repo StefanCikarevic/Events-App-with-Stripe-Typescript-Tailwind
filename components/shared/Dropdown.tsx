@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { startTransition, useEffect, useState } from "react";
 
 import {
   Select,
@@ -20,6 +20,10 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Input } from "../ui/input";
+import {
+  createCategory,
+  getAllCategories,
+} from "@/lib/actions/category.actions";
 
 type DropdownProps = {
   value?: string;
@@ -30,12 +34,22 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
   const [newCategory, setNewCategory] = useState("");
 
   const handleAddCategory = () => {
-    // createCategory({
-    //   categoryName: newCategory.trim(),
-    // }).then((category) => {
-    //   setCategories((prevState) => [...prevState, category]);
-    // });
+    createCategory({
+      categoryName: newCategory.trim(),
+    }).then((category) => {
+      setCategories((prevState) => [...prevState, category]);
+    });
   };
+
+  useEffect(() => {
+    return () => {
+      const getCategories = async () => {
+        const categories = await getAllCategories();
+        categories && setCategories(categories as ICategory[]);
+      };
+      getCategories();
+    };
+  }, []);
 
   return (
     <Select onValueChange={onChangeHandler} defaultValue={value}>
@@ -72,7 +86,7 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
-              // onClick={() => startTransition(handleAddCategory)}
+                onClick={() => startTransition(handleAddCategory)}
               >
                 Add
               </AlertDialogAction>
