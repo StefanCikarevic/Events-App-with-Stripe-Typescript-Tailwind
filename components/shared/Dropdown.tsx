@@ -1,5 +1,3 @@
-import React, { startTransition, useEffect, useState } from "react";
-
 import {
   Select,
   SelectContent,
@@ -8,6 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ICategory } from "@/lib/database/models/category.model";
+import { startTransition, useEffect, useState } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,6 +28,7 @@ type DropdownProps = {
   value?: string;
   onChangeHandler?: () => void;
 };
+
 const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [newCategory, setNewCategory] = useState("");
@@ -42,13 +42,13 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
   };
 
   useEffect(() => {
-    return () => {
-      const getCategories = async () => {
-        const categories = await getAllCategories();
-        categories && setCategories(categories as ICategory[]);
-      };
-      getCategories();
+    const getCategories = async () => {
+      const categoryList = await getAllCategories();
+
+      categoryList && setCategories(categoryList as ICategory[]);
     };
+
+    getCategories().then((r) => console.log(r));
   }, []);
 
   return (
@@ -67,6 +67,7 @@ const Dropdown = ({ value, onChangeHandler }: DropdownProps) => {
               {category.name}
             </SelectItem>
           ))}
+
         <AlertDialog>
           <AlertDialogTrigger className="p-medium-14 flex w-full rounded-sm py-3 pl-8 text-primary-500 hover:bg-primary-50 focus:text-primary-500">
             Add new category
