@@ -1,11 +1,12 @@
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { getAllEvents } from "@/lib/actions/event.action";
+import CategoryFilter from "@/components/shared/CategoryFilter";
 import Collection from "@/components/shared/Collection";
 import Search from "@/components/shared/Search";
+import { Button } from "@/components/ui/button";
+
 import { SearchParamProps } from "@/types";
-import CategoryFilter from "@/components/shared/CategoryFilter";
+import Image from "next/image";
+import Link from "next/link";
+import { getAllEvents } from "@/lib/actions/event.action";
 
 export default async function Home({ searchParams }: SearchParamProps) {
   const page = Number(searchParams?.page) || 1;
@@ -14,10 +15,11 @@ export default async function Home({ searchParams }: SearchParamProps) {
 
   const events = await getAllEvents({
     query: searchText,
-    category: category,
-    page: page,
-    limit: 10,
+    category,
+    page,
+    limit: 6,
   });
+
   return (
     <>
       <section className="bg-primary-50 bg-dotted-pattern bg-contain py-5 md:py-10">
@@ -52,6 +54,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
         <h2 className="h2-bold">
           Trust by <br /> Thousands of Events
         </h2>
+
         <div className="flex w-full flex-col gap-5 md:flex-row">
           <Search />
           <CategoryFilter />
@@ -63,7 +66,7 @@ export default async function Home({ searchParams }: SearchParamProps) {
           emptyStateSubtext="Come back later"
           collectionType="All_Events"
           limit={6}
-          page={1}
+          page={page}
           totalPages={events?.totalPages}
         />
       </section>
