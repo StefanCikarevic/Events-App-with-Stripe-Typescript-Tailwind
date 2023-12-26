@@ -3,11 +3,10 @@ import { SearchParamProps } from "@/types";
 import { getEventById } from "@/lib/actions/event.action";
 import Image from "next/image";
 import { formatDateTime } from "@/lib/utils";
+import Collection from "@/components/shared/Collection";
 
 const EventDetails = async ({ params: { id } }: SearchParamProps) => {
   const event = await getEventById(id);
-
-  console.log(event);
 
   return (
     <>
